@@ -29,15 +29,12 @@
     (and (<= (password-min password) count)
          (>= (password-max password) count))))
 
-(defun xor (a b)
-  (or (and a (not b)) (and (not a) b)))
-
 (defun valid-password2 (password)
   (let ((min (password-min password))
         (max (password-max password))
         (pass (password-password password))
         (letter (password-letter password)))
-  (xor (char= letter (char pass (1- min)))
+  (alexandria:xor (char= letter (char pass (1- min)))
        (char= letter (char pass (1- max))))))
 
 (defun amount-valid (passwords &optional (predicate #'valid-password))
