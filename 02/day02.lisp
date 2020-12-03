@@ -12,10 +12,10 @@
 
 (defun read-input (filename)
   (with-open-file (stream filename :direction :input)
-    (loop :for line = (read-line stream nil nil)
-          :with regex = (ppcre:create-scanner "(\\d+)-(\\d+)\\s+(\\w):\\s+(\\w+)")
-          :while (not (null line))
-          :collect
+    (loop for line = (read-line stream nil nil)
+          with regex = (ppcre:create-scanner "(\\d+)-(\\d+)\\s+(\\w):\\s+(\\w+)")
+          while (not (null line))
+          collect
           (ppcre:register-groups-bind (min max letter password)
               (regex line )
             (make-password :min (parse-integer min)
@@ -24,8 +24,8 @@
                            :password password)))))
 
 (defun valid-password (password)
-  (let ((count (loop :for c :across (password-password password)
-                     :counting (char= c (password-letter password)))))
+  (let ((count (loop for c across (password-password password)
+                     counting (char= c (password-letter password)))))
     (and (<= (password-min password) count)
          (>= (password-max password) count))))
 
@@ -38,11 +38,10 @@
        (char= letter (char pass (1- max))))))
 
 (defun amount-valid (passwords &optional (predicate #'valid-password))
-  (loop :for password :in passwords
-        :counting (funcall predicate password)))
+  (count-if #'identity (mapcar predicate passwords)))
 
-(defun solve01 ()
+(defun solve1 ()
   (amount-valid (read-input "input")))
 
-(defun solve02 ()
+(defun solve2 ()
   (amount-valid (read-input "input") #'valid-password2))
