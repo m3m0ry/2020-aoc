@@ -4,9 +4,7 @@
 (in-package :aoc-2020-day-6)
 
 (defun string-to-set (string)
-  (let ((set '()))
-    (map 'list (lambda (x) (setf set (adjoin x set))) string)
-    set))
+  (reduce #'union (map 'list (lambda (x) (list x)) string)))
 
 
 (defun read-input (filename)
@@ -27,14 +25,6 @@
   (reduce #'+ (mapcar #'length (read-input "input"))))
 
 
-(defun group-to-set (persons)
-  (loop for person in persons
-        with group = (first persons)
-        do
-           (setf group (intersection group person))
-        finally (return group)))
-
-
 (defun read-input2 (filename)
   (with-open-file (stream filename :direction :input)
     (loop for line = (read-line stream nil nil)
@@ -43,7 +33,7 @@
           if (string= "" line)
             collect
             (prog1
-                (group-to-set current-group)
+                (reduce #'intersection current-group)
               (setf current-group '()))
           else
             do (push (string-to-set line) current-group))))
