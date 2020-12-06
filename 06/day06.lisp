@@ -4,7 +4,7 @@
 (in-package :aoc-2020-day-6)
 
 (defun string-to-set (string)
-  (reduce #'union (map 'list (lambda (x) (list x)) string)))
+  (remove-duplicates (coerce string 'list))
 
 
 (defun read-input (filename)
