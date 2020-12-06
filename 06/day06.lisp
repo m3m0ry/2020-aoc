@@ -7,22 +7,20 @@
   (remove-duplicates (coerce string 'list))
 
 
-(defun read-input (filename)
+(defun read-input1 (filename)
   (with-open-file (stream filename :direction :input)
-    (loop for line = (read-line stream nil nil)
-          with current-group = ""
-          while (not (null line))
-          if (string= "" line)
+    (mapcar
+      (lambda (x) (reduce #'union x))
+      (split-sequence:split-sequence
+      '()
+      (loop for line = (read-line stream nil nil)
+            while (not (null line))
             collect
-            (prog1
-                (string-to-set current-group)
-              (setf current-group ""))
-          else
-            do (setf current-group (concatenate 'string current-group line)))))
+            (string-to-set line))))))
 
 
 (defun solve1 ()
-  (reduce #'+ (mapcar #'length (read-input "input"))))
+  (reduce #'+ (mapcar #'length (read-input1 "input"))))
 
 
 (defun read-input2 (filename)
