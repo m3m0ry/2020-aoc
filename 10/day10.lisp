@@ -20,20 +20,25 @@
            input
            (list (+ 3 (car (last input))))))))
 
-(defun count-possibility (a b c)
-  (if (>= 3 (- b a))
-      (if (>= 3 (- c a))
-          1
-          2)
-      0))
-
-(defun count-all-possibilities (input)
-  (count-if (lambda (x) (not (null x))) (mapcar #'count-possibility input (cdr input) (cddr input))))
+(defun count-all-possibilities (numbers)
+  (let ((paths (make-array (length numbers) :initial-element 0)))
+    (setf (aref paths 0) 1)
+    (loop for number in numbers
+          for i from 0
+          do
+             (loop for delta in '(1 2 3)
+                   for prev = (- i delta)
+                   when (and (>= prev 0)
+                             (<= (- number (nth prev numbers)) 3))
+                     do
+                        (incf (aref paths i) (aref paths prev))))
+    (aref paths (1- (length numbers)))))
 
 (defun solve2 ()
-  (let ((input (sort (read-input "test-input") #'<)))
-    (count-all-possibilities
-     (append '(0)
-             input
-             (list (+ 3 (car (last input))))))))
+  (let ((input (sort (read-input "input") #'<)))
+    (setf input
+          (append '(0)
+                  input
+                  (list (+ 3 (car (last input))))))
+    (count-all-possibilities input)))
 
