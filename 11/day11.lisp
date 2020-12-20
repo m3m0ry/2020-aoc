@@ -16,7 +16,6 @@
     (occupied #\#)
     (floor #\.)))
 
-
 (defun list-to-2d-array (list)
   (make-array (list (length list)
                     (length (first list)))
