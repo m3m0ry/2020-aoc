@@ -6,7 +6,9 @@
 (defun lexer (s)
   (remove-if-not (lambda (c) (or (alphanumericp c) (find c "*+()"))) s))
 
-(defrule expression (or mul term))
+(defrule expression (or '1 '2))
+
+(defrule (intern "1") (or "a" "b"))
 
 (defrule mul (and expression "*" term)
   (:destructure (a op b)
